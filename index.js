@@ -21,6 +21,8 @@ app.post('/callback', (req, res) => {
       case 'message':
         // Lakukan aksi untuk pesan teks
         console.log('Pesan Teks Diterima:', req.body);
+        res.send(`<!DOCTYPE html><html><head>  <title></title></head><body><P>PESAN DITERIMA =>  ${req.body}</P></body></html>`)
+
         break;
 
       case 'image':
@@ -59,16 +61,7 @@ app.post('/callback', (req, res) => {
 
 
 app.get('/', (req, res) => {
-  res.send(`<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
-
-<P>HALO SAYA RAVIT</P>
-</body>
-</html>`)
+  res.send(`<!DOCTYPE html><html><head>  <title></title></head><body><P>HALO SAYA RAVIT</P></body></html>`)
 
 });
 
