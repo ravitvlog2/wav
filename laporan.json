@@ -1,0 +1,23 @@
+
+{
+  "data" : [
+    {
+      "kodevoucher" : "gdfhjsfg6sdfugs",
+      "nowa" : "0812312312",
+      "tanggal" : "",
+      "status":"sukses"
+    },
+    {
+      "kodevoucher" : "gdfhjsfg5uytfugs",
+      "nowa" : "0812312312",
+      "tanggal" : "",
+      "status":"sukses"
+    },
+    {
+      "kodevoucher" : "gdfhjsfg6smjelkj",
+      "nowa" : "0812312312",
+      "tanggal" : "",
+      "status":"sukses"
+    }
+  ]
+}

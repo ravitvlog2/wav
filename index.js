@@ -1,53 +1,105 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const chalk= require('chalk')
+const fs = require('fs');
+const fetch = require('node-fetch');
+const FormData = require('form-data');
+const path = require('path');
+
 
 const app = express();
-const port = 3000; // Ganti dengan port yang sesuai
+const port = 3000; 
 
-// Middleware untuk mengurai body dari permintaan HTTP sebagai JSON
+
 app.use(bodyParser.json());
 
 
 
 
-// Endpoint untuk menerima pesan melalui webhook
+
 app.post('/callback', (req, res) => {
-  console.log('callback')
   try {
     const { date, device, from, message_id, source, type } = req.body;
-
-    // Lakukan aksi berdasarkan parameter yang diterima
+    
     switch (type) {
       case 'message':
-        // Lakukan aksi untuk pesan teks
-        console.log('Pesan Teks Diterima:', req.body);
-        res.send(`<!DOCTYPE html><html><head>  <title></title></head><body><P>PESAN DITERIMA =>  ${req.body}</P></body></html>`)
+      console.log('callback')
 
-        break;
+      let pesanditerimabos=req.body.text
+      let penerimavoucher=req.body.from
+      pesanditerimabos=pesanditerimabos.toLowerCase();
+      
+      if(pesanditerimabos=='dapatkan kupon'){
+
+        fs.readFile('laporan.json', 'utf8', (err, data) => {
+          if (err) {
+            console.error('Gagal membaca file laporan.json:', err);
+            return;
+          }
+
+          try {
+            const jsonData = JSON.parse(data);
+
+            const targetNumber = penerimavoucher;
+            let found = false;
+
+            jsonData.data.forEach(item => {
+              if (item.nowa === targetNumber) {
+                found = true;
+              }
+            });
+
+            if (found) {
+
+              console.log(`Nomor ${targetNumber} ditemukan dalam JSON.`);
+              console.log(chalk.red(`${targetNumber} Kamu sudah dapat voucher sebelumnya`))
+
+            } else {
+
+              console.log(`Nomor ${targetNumber} tidak ditemukan dalam JSON.`);
+              console.log(chalk.green('SELAMAT KAMU DAPAT KUPON => '+penerimavoucher))
+
+
+
+            }
+          } catch (parseError) {
+            console.error('Gagal parsing file laporan.json:', parseError);
+          }
+        });
+
+        
+
+      }
+
+
+
+
+      break;
 
       case 'image':
         // Lakukan aksi untuk gambar
         console.log('Gambar Diterima:', req.body);
         break;
 
-      case 'video':
+        case 'video':
         // Lakukan aksi untuk video
-        console.log('Video Diterima:', req.body);
+        // console.log('Video Diterima:', req.body);
+
         break;
 
-      case 'document':
+        case 'document':
         // Lakukan aksi untuk dokumen
-        console.log('Dokumen Diterima:', req.body);
+        // console.log('Dokumen Diterima:', req.body);
         break;
 
-      case 'location':
+        case 'location':
         // Lakukan aksi untuk lokasi
-        console.log('Lokasi Diterima:', req.body);
+        // console.log('Lokasi Diterima:', req.body);
         break;
 
-      default:
-        console.error('Tipe pesan yang tidak dikenali:', type);
-    }
+        default:
+        // console.error('Tipe pesan yang tidak dikenali:', type);
+      }
 
     // Berikan respons OK ke pengirim
     res.status(200).send('OK');
@@ -65,9 +117,11 @@ app.get('/', (req, res) => {
 
 });
 
+
+
+
 app.listen(port, () => {
   console.log(`Webhook berjalan di port ${port}`);
 });
-
 
 
