@@ -1,6 +1,5 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
-const FormData = require('form-data');
 const path = require('path');
 
 // Fungsi untuk mendapatkan daftar file dalam folder "data"
@@ -14,10 +13,20 @@ function getRandomImageFile() {
 // Fungsi untuk mengirim gambar ke waapisender.id
 async function sendImageToApi(imagePath) {
   const url = 'https://waapisender.id/api/upload';
-  const form = new FormData();
-  form.append('image', fs.createReadStream(imagePath));
+  const imageBuffer = fs.readFileSync(imagePath);
+  const imageBase64 = imageBuffer.toString('base64');
+  const data = {
+    api_key: 'jafZOL7IkrKzfqzUXLcX43HiFJwGqC1L',
+    device_key: 'qfc2oj',
+    destination: destinationOrGroupId,
+    image: imageBase64,
+    filename: filename,
+    caption: caption,
+  };
 
   try {
+
+
     const response = await fetch(url, {
       method: 'POST',
       body: form,
